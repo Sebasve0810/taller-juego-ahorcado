@@ -1,0 +1,51 @@
+import java.io.Console;
+
+public class JuegoAhorcado {
+
+    private Palabra palabra;
+    private Ahorcado ahorcado;
+
+    public JuegoAhorcado(Palabra palabra, Ahorcado ahorcado) {
+        this.palabra = palabra;
+        this.ahorcado = ahorcado;
+    }
+
+    public void iniciarJuego() {
+        Console console = System.console();
+
+        if (console == null) {
+            System.out.println("La consola no está disponible. Por favor, ejecute en una terminal.");
+            return;
+        }
+
+        char[] palabraIngresada = console.readPassword("Profesor, ingrese una palabra: ");
+        palabra.setPalabraOriginal(new String(palabraIngresada).toLowerCase());
+
+        // Limpiar la pantalla
+        System.out.println("\n\n\n\n\n\n\n\n\n");
+
+        int intentosFallidos = 0;
+        boolean palabraAdivinadaCompletamente = false;
+
+        while (intentosFallidos < 6 && !palabraAdivinadaCompletamente) {
+            palabra.mostrarPalabra();
+            System.out.print("Estudiante, adivine una letra: ");
+            char letra = console.readLine().toLowerCase().charAt(0);
+
+            boolean acierto = palabra.adivinarLetra(letra);
+
+            if (!acierto) {
+                intentosFallidos++;
+                ahorcado.mostrarAhorcado(intentosFallidos);
+            }
+
+            palabraAdivinadaCompletamente = palabra.comprobarPalabraAdivinada();
+        }
+
+        if (palabraAdivinadaCompletamente) {
+            System.out.println("¡Felicidades, adivinaste la palabra!");
+        } else {
+            System.out.println("La palabra era: " + palabra.getPalabraOriginal());
+        }
+    }
+}
